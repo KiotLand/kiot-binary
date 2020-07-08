@@ -39,12 +39,12 @@ kotlin {
 			dependencies {
 				implementation(kotlin("stdlib-js"))
 				implementation("org.jetbrains.kotlinx:kotlinx-io-js:0.1.8")
+				api(npm("text-encoding"))
 			}
 		}
 		val jsTest by getting {
 			dependencies {
 				implementation(kotlin("test-js"))
-				api(npm("text-encoding"))
 			}
 		}
 		val jvmMain by getting {
