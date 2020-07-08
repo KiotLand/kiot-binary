@@ -4,7 +4,9 @@ package org.kiot.util
 
 import kotlinx.io.core.String
 import kotlinx.io.core.toByteArray
+import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KClass
+import kotlin.reflect.KProperty
 
 interface Binarizable
 
@@ -40,68 +42,80 @@ val Float.Companion.binarySize: Int
 val Double.Companion.binarySize: Int
 	inline get() = 8
 
-val Boolean.Companion.binarizer: StaticBinarizer<Boolean>
-	get() = object : StaticBinarizer<Boolean> {
-		override fun binarize(bin: Binary, value: Boolean) = bin.put(value)
-		override fun debinarize(bin: Binary) = bin.boolean()
-		override val binarySize: Int
-			get() = Boolean.binarySize
-	}
-val Char.Companion.binarizer: StaticBinarizer<Char>
-	get() = object : StaticBinarizer<Char> {
-		override fun binarize(bin: Binary, value: Char) = bin.put(value)
-		override fun debinarize(bin: Binary) = bin.char()
-		override val binarySize: Int
-			get() = Char.binarySize
-	}
-val Byte.Companion.binarizer: StaticBinarizer<Byte>
-	get() = object : StaticBinarizer<Byte> {
-		override fun binarize(bin: Binary, value: Byte) = bin.put(value)
-		override fun debinarize(bin: Binary) = bin.byte()
-		override val binarySize: Int
-			get() = Byte.binarySize
-	}
-val Short.Companion.binarizer: StaticBinarizer<Short>
-	get() = object : StaticBinarizer<Short> {
-		override fun binarize(bin: Binary, value: Short) = bin.put(value)
-		override fun debinarize(bin: Binary) = bin.short()
-		override val binarySize: Int
-			get() = Short.binarySize
-	}
-val Int.Companion.binarizer: StaticBinarizer<Int>
-	get() = object : StaticBinarizer<Int> {
-		override fun binarize(bin: Binary, value: Int) = bin.put(value)
-		override fun debinarize(bin: Binary) = bin.int()
-		override val binarySize: Int
-			get() = Int.binarySize
-	}
-val Long.Companion.binarizer: StaticBinarizer<Long>
-	get() = object : StaticBinarizer<Long> {
-		override fun binarize(bin: Binary, value: Long) = bin.put(value)
-		override fun debinarize(bin: Binary) = bin.long()
-		override val binarySize: Int
-			get() = Long.binarySize
-	}
-val Float.Companion.binarizer: StaticBinarizer<Float>
-	get() = object : StaticBinarizer<Float> {
-		override fun binarize(bin: Binary, value: Float) = bin.put(value)
-		override fun debinarize(bin: Binary) = bin.float()
-		override val binarySize: Int
-			get() = Float.binarySize
-	}
-val Double.Companion.binarizer: StaticBinarizer<Double>
-	get() = object : StaticBinarizer<Double> {
-		override fun binarize(bin: Binary, value: Double) = bin.put(value)
-		override fun debinarize(bin: Binary) = bin.double()
-		override val binarySize: Int
-			get() = Double.binarySize
-	}
-val String.Companion.binarizer: Binarizer<String>
-	get() = object : Binarizer<String> {
-		override fun binarize(bin: Binary, value: String) = bin.put(value)
-		override fun debinarize(bin: Binary) = bin.string()
-		override fun measure(value: String) = Binary.measure(value)
-	}
+class DummyField<R, T>(private val value: T) : ReadOnlyProperty<R, T> {
+	override fun getValue(thisRef: R, property: KProperty<*>) = value
+}
+
+val Boolean.Companion.binarizer: StaticBinarizer<Boolean> by DummyField(object : StaticBinarizer<Boolean> {
+	override fun binarize(bin: Binary, value: Boolean) = bin.put(value)
+	override fun debinarize(bin: Binary) = bin.boolean()
+	override val binarySize: Int
+		get() = Boolean.binarySize
+})
+val Char.Companion.binarizer: StaticBinarizer<Char> by DummyField(object : StaticBinarizer<Char> {
+	override fun binarize(bin: Binary, value: Char) = bin.put(value)
+	override fun debinarize(bin: Binary) = bin.char()
+	override val binarySize: Int
+		get() = Char.binarySize
+})
+val Byte.Companion.binarizer: StaticBinarizer<Byte> by DummyField(object : StaticBinarizer<Byte> {
+	override fun binarize(bin: Binary, value: Byte) = bin.put(value)
+	override fun debinarize(bin: Binary) = bin.byte()
+	override val binarySize: Int
+		get() = Byte.binarySize
+})
+val Short.Companion.binarizer: StaticBinarizer<Short> by DummyField(object : StaticBinarizer<Short> {
+	override fun binarize(bin: Binary, value: Short) = bin.put(value)
+	override fun debinarize(bin: Binary) = bin.short()
+	override val binarySize: Int
+		get() = Short.binarySize
+})
+val Int.Companion.binarizer: StaticBinarizer<Int> by DummyField(object : StaticBinarizer<Int> {
+	override fun binarize(bin: Binary, value: Int) = bin.put(value)
+	override fun debinarize(bin: Binary) = bin.int()
+	override val binarySize: Int
+		get() = Int.binarySize
+})
+val Long.Companion.binarizer: StaticBinarizer<Long> by DummyField(object : StaticBinarizer<Long> {
+	override fun binarize(bin: Binary, value: Long) = bin.put(value)
+	override fun debinarize(bin: Binary) = bin.long()
+	override val binarySize: Int
+		get() = Long.binarySize
+})
+val Float.Companion.binarizer: StaticBinarizer<Float> by DummyField(object : StaticBinarizer<Float> {
+	override fun binarize(bin: Binary, value: Float) = bin.put(value)
+	override fun debinarize(bin: Binary) = bin.float()
+	override val binarySize: Int
+		get() = Float.binarySize
+})
+val Double.Companion.binarizer: StaticBinarizer<Double> by DummyField(object : StaticBinarizer<Double> {
+	override fun binarize(bin: Binary, value: Double) = bin.put(value)
+	override fun debinarize(bin: Binary) = bin.double()
+	override val binarySize: Int
+		get() = Double.binarySize
+})
+val String.Companion.binarizer: Binarizer<String> by DummyField(object : Binarizer<String> {
+	override fun binarize(bin: Binary, value: String) = bin.put(value)
+	override fun debinarize(bin: Binary) = bin.string()
+	override fun measure(value: String) = Binary.measure(value)
+})
+
+inline val BooleanArray.binarySize: Int
+	get() = Int.binarySize + Boolean.binarySize * size
+inline val CharArray.binarySize: Int
+	get() = Int.binarySize + Char.binarySize * size
+inline val ByteArray.binarySize: Int
+	get() = Int.binarySize + Byte.binarySize * size
+inline val ShortArray.binarySize: Int
+	get() = Int.binarySize + Short.binarySize * size
+inline val IntArray.binarySize: Int
+	get() = Int.binarySize + Int.binarySize * size
+inline val LongArray.binarySize: Int
+	get() = Int.binarySize + Long.binarySize * size
+inline val FloatArray.binarySize: Int
+	get() = Int.binarySize + Float.binarySize * size
+inline val DoubleArray.binarySize: Int
+	get() = Int.binarySize + Double.binarySize * size
 
 class Binary(val array: ByteArray, var index: Int = 0, val endIndex: Int = array.size) {
 	companion object {
@@ -153,7 +167,9 @@ class Binary(val array: ByteArray, var index: Int = 0, val endIndex: Int = array
 
 		inline fun <K, V> mapBinarizer(keyBinarizer: Binarizer<K>, valueBinarizer: Binarizer<V>) =
 			object : Binarizer<Map<K, V>> {
-				override fun binarize(bin: Binary, value: Map<K, V>) = bin.putMap(value, keyBinarizer, valueBinarizer)
+				override fun binarize(bin: Binary, value: Map<K, V>) =
+					bin.putMap(value, keyBinarizer, valueBinarizer)
+
 				override fun debinarize(bin: Binary): Map<K, V> = bin.readMap(keyBinarizer, valueBinarizer)
 				override fun measure(value: Map<K, V>): Int = measureMap(value, keyBinarizer, valueBinarizer)
 			}
@@ -168,15 +184,6 @@ class Binary(val array: ByteArray, var index: Int = 0, val endIndex: Int = array
 			}
 		}
 
-		inline fun measure(value: BooleanArray) = 4 + value.size
-		inline fun measure(value: CharArray) = 4 + value.size * 2
-		inline fun measure(value: ByteArray) = 4 + value.size
-		inline fun measure(value: ShortArray) = 4 + value.size * 2
-		inline fun measure(value: IntArray) = 4 + value.size * 4
-		inline fun measure(value: LongArray) = 4 + value.size * 8
-		inline fun measure(value: FloatArray) = 4 + value.size * 4
-		inline fun measure(value: DoubleArray) = 4 + value.size * 8
-
 		inline fun <T> measure(value: T, binarizer: Binarizer<T>) = binarizer.measure(value)
 
 		inline fun <reified T> binarize(value: T): ByteArray = binarize(value, binarizer())
@@ -184,7 +191,8 @@ class Binary(val array: ByteArray, var index: Int = 0, val endIndex: Int = array
 			return ByteArray(binarizer.measure(value)).also { binarizer.binarize(it.asBinary(), value) }
 		}
 
-		inline fun <T> debinarize(data: ByteArray, binarizer: Binarizer<T>): T = binarizer.debinarize(data.asBinary())
+		inline fun <T> debinarize(data: ByteArray, binarizer: Binarizer<T>): T =
+			binarizer.debinarize(data.asBinary())
 	}
 
 	inline fun <R> require(count: Int, block: () -> R): R {
@@ -196,7 +204,8 @@ class Binary(val array: ByteArray, var index: Int = 0, val endIndex: Int = array
 	fun <T> read(binarizer: Binarizer<T>): T = binarizer.debinarize(this)
 
 	inline fun <reified T> readList() = readList(binarizer<T>())
-	inline fun <reified T> readList(binarizer: Binarizer<T>): List<T> = Array(int()) { read(binarizer) }.asList()
+	inline fun <reified T> readList(binarizer: Binarizer<T>): List<T> =
+		Array(int()) { read(binarizer) }.asList()
 
 	inline fun <reified T> readMutableList() = readMutableList(binarizer<T>())
 	fun <T> readMutableList(binarizer: Binarizer<T>): MutableList<T> =
