@@ -335,7 +335,7 @@ class Binary(val array: ByteArray, var index: Int = 0, val endIndex: Int = array
 		for (v in value) put(v)
 	}
 
-	fun put(value: ByteArray) {
+	fun put(value: ByteArray) = require(Int.binarySize + value.size) {
 		put(value.size)
 		value.copyInto(array, index)
 		index += value.size
