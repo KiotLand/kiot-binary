@@ -1,7 +1,7 @@
 @file:Suppress("UNUSED_VARIABLE")
 
 plugins {
-	kotlin("multiplatform") version "1.3.72"
+	kotlin("multiplatform") version "1.4.0"
 	id("maven-publish")
 }
 
@@ -39,7 +39,7 @@ kotlin {
 			dependencies {
 				implementation(kotlin("stdlib-js"))
 				implementation("org.jetbrains.kotlinx:kotlinx-io-js:0.1.8")
-				api(npm("text-encoding"))
+				api(npm("text-encoding", "0.7.0"))
 			}
 		}
 		val jsTest by getting {
